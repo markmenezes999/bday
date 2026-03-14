@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ISA's Birthday Surprise</title>
+
+<style>
+
+body{
+background: linear-gradient(135deg,#ff6ec4,#7873f5);
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+font-family:Arial;
+color:white;
+text-align:center;
+}
+
+h1{
+font-size:50px;
+margin-bottom:10px;
+}
+
+h2{
+font-size:30px;
+}
+
+#timer{
+font-size:40px;
+margin-top:20px;
+background:rgba(255,255,255,0.2);
+padding:20px;
+border-radius:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🎁 ISA's Birthday Surprise 🎁</h1>
+<h2>Unlocking In...</h2>
+
+<div id="timer"></div>
+
+<script>
+
+var birthday = new Date("March 24, 2026 00:00:00").getTime();
+
+var countdown = setInterval(function(){
+
+var now = new Date().getTime();
+var distance = birthday - now;
+
+var days = Math.floor(distance/(1000*60*60*24));
+var hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+var minutes = Math.floor((distance%(1000*60*60))/(1000*60));
+var seconds = Math.floor((distance%(1000*60))/1000);
+
+document.getElementById("timer").innerHTML =
+days + "d " + hours + "h "
++ minutes + "m " + seconds + "s ";
+
+if(distance < 0){
+clearInterval(countdown);
+document.getElementById("timer").innerHTML = "🎉 Surprise Unlocked!";
+}
+
+},1000);
+
+</script>
+
+</body>
+</html>
