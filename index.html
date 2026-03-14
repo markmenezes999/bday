@@ -113,16 +113,49 @@
   .book-cover{
     position:absolute;inset:0;
     border-radius:4px 18px 18px 4px;
-    background:linear-gradient(145deg,#1a0508,#0d0305);
-    border:1px solid rgba(220,20,60,0.25);
-    box-shadow:0 20px 80px rgba(0,0,0,0.85),inset 0 0 0 1px rgba(220,20,60,0.08);
-    z-index:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;
+    background: linear-gradient(160deg, #1c0408 0%, #0d0305 50%, #1a0305 100%);
+    border:1px solid rgba(220,20,60,0.2);
+    box-shadow:0 20px 80px rgba(0,0,0,0.85),inset 0 0 80px rgba(220,20,60,0.04);
+    z-index:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;
+    overflow:hidden;
   }
-  .book-cover::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(to bottom,#dc143c,#8b0000);border-radius:4px 0 0 4px;}
-  .cover-rose{font-size:3rem;animation:heartBeat 1.4s ease-in-out infinite;filter:drop-shadow(0 0 15px rgba(220,20,60,0.8));}
-  .cover-title{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;font-style:italic;background:linear-gradient(135deg,#ff6b6b,#dc143c,#ff4444);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s ease infinite;text-align:center;padding:0 1.5rem;line-height:1.2;}
-  .cover-sub{font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(220,20,60,0.55);}
-  .cover-line{width:60px;height:1px;background:linear-gradient(to right,transparent,#dc143c,transparent);}
+  /* Spine */
+  .book-cover::before{content:'';position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(to bottom,#ff6b6b,#dc143c,#8b0000,#dc143c,#ff6b6b);border-radius:4px 0 0 4px;}
+  /* Corner ornaments */
+  .book-cover::after{
+    content:'✦';position:absolute;font-size:0.6rem;color:rgba(220,20,60,0.25);
+    top:1rem;right:1.2rem;letter-spacing:0.3em;
+  }
+  /* Subtle radial glow centre */
+  .cover-glow-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(220,20,60,0.08) 0%,transparent 70%);pointer-events:none;}
+
+  .cover-petals{display:flex;gap:1.2rem;align-items:center;margin-bottom:0.3rem;}
+  .cover-petal{font-size:1.8rem;animation:petalFloat 2.5s ease-in-out infinite;}
+  .cover-petal.p1{animation-delay:0s;filter:drop-shadow(0 0 10px rgba(220,20,60,0.7));}
+  .cover-petal.p2{font-size:1rem;animation-delay:0.4s;filter:drop-shadow(0 0 8px rgba(255,200,100,0.6));}
+  .cover-petal.p3{animation-delay:0.8s;filter:drop-shadow(0 0 10px rgba(220,20,60,0.7));}
+  @keyframes petalFloat{0%,100%{transform:translateY(0) rotate(-5deg);}50%{transform:translateY(-8px) rotate(5deg);}}
+
+  .cover-ornament{font-size:0.55rem;letter-spacing:0.5em;color:rgba(220,20,60,0.4);}
+
+  .cover-title{
+    font-family:'Playfair Display',serif;
+    font-size:3.4rem;font-weight:900;font-style:italic;
+    background:linear-gradient(160deg,#ff9999 0%,#ff6b6b 30%,#dc143c 60%,#ff6b6b 100%);
+    background-size:200% 200%;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    animation:shimmer 3s ease infinite;
+    text-align:center;line-height:1.05;
+    text-shadow:none;
+    letter-spacing:-1px;
+  }
+  .cover-tagline{
+    font-size:0.68rem;letter-spacing:0.22em;text-transform:lowercase;
+    color:rgba(255,153,153,0.45);
+    font-family:'Playfair Display',serif;font-style:italic;
+  }
+  /* Bottom-left corner star */
+  .book-cover-star{position:absolute;bottom:1rem;left:1.4rem;font-size:0.55rem;color:rgba(220,20,60,0.2);letter-spacing:0.3em;}
 
   /* Pages */
   .page{position:absolute;inset:0;transform-origin:left center;transform-style:preserve-3d;transition:transform 0.75s cubic-bezier(0.645,0.045,0.355,1.000);user-select:none;}
@@ -213,9 +246,7 @@
     <div class="name-glow">ISA</div>
     <div class="name">ISA</div>
   </div>
-  <p class="subtitle">
-    <span>'s</span>&nbsp;<span>Birthday</span>&nbsp;<span>Surprise</span>
-  </p>
+  <p class="subtitle"><span>Cuties Birthday</span></p>
   <p class="unlock-label" id="unlockLabel">✦ unlocking in ✦</p>
   <div class="countdown" id="countdown">
     <div class="time-block">
@@ -262,11 +293,15 @@
 
       <!-- Static cover -->
       <div class="book-cover">
-        <div class="cover-rose">🌹</div>
-        <div class="cover-line"></div>
-        <div class="cover-title">For ISA</div>
-        <div class="cover-line"></div>
-        <div class="cover-sub">a special surprise</div>
+        <div class="cover-petals">
+          <span class="cover-petal p1">🌹</span>
+          <span class="cover-petal p2">✨</span>
+          <span class="cover-petal p3">🌹</span>
+        </div>
+        <div class="cover-ornament">✦ ✦ ✦</div>
+        <div class="cover-title">For<br>ISA</div>
+        <div class="cover-ornament">✦ ✦ ✦</div>
+        <div class="cover-tagline">open your heart 🌹</div>
       </div>
 
       <!-- PAGE 1: front = HBD, back = message -->
@@ -349,8 +384,7 @@
   <span id="musicLabel">Espresso · Sabrina Carpenter</span>
 </div>
 
-<!-- YT player hidden -->
-<div id="ytPlayer" style="position:fixed;bottom:-300px;left:-300px;width:1px;height:1px;opacity:0;pointer-events:none;"></div>
+<!-- YT API -->
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
@@ -412,34 +446,54 @@ function tick(){
 tick(); setInterval(tick,1000);
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// YOUTUBE — Sabrina Carpenter Espresso
+// MUSIC — Sabrina Carpenter Espresso
+// Uses YouTube IFrame API; plays on user gesture (button click)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 let ytReady=false, player=null, playing=false;
+
 window.onYouTubeIframeAPIReady=function(){
   ytReady=true;
-  player=new YT.Player('ytPlayer',{
-    height:'1',width:'1',
-    videoId:'M7RnDknxpNI',
-    playerVars:{autoplay:0,controls:0,loop:1,playlist:'M7RnDknxpNI'},
-    events:{onReady:function(e){if(playing)e.target.playVideo();}}
+  // Create a small real iframe (1x1 off-screen) — must be in DOM as real element
+  const div=document.createElement('div');
+  div.id='ytHolder';
+  div.style.cssText='position:fixed;bottom:-200px;left:-200px;width:2px;height:2px;';
+  document.body.appendChild(div);
+  player=new YT.Player('ytHolder',{
+    width:'2',height:'2',
+    videoId:'M7RnDknxpNI', // Espresso - Sabrina Carpenter official
+    playerVars:{autoplay:0,controls:0,disablekb:1,fs:0,loop:1,playlist:'M7RnDknxpNI',modestbranding:1,rel:0},
+    events:{
+      onReady:function(e){
+        if(playing){ e.target.setVolume(80); e.target.playVideo(); }
+      },
+      onStateChange:function(e){
+        // loop manually if needed
+        if(e.data===YT.PlayerState.ENDED){ e.target.seekTo(0); e.target.playVideo(); }
+      }
+    }
   });
 };
+
 function startMusic(){
   playing=true;
   const badge=document.getElementById('musicBadge');
   badge.classList.add('visible');
   badge.classList.remove('paused');
-  if(player&&ytReady){try{player.playVideo();}catch(e){}}
+  if(player&&ytReady){
+    try{ player.setVolume(80); player.playVideo(); }catch(e){}
+  }
 }
+
 function toggleMusic(){
-  if(!player)return;
+  if(!player){ return; }
   try{
-    if(playing){
-      player.pauseVideo();playing=false;
+    const state=player.getPlayerState();
+    if(state===YT.PlayerState.PLAYING){
+      player.pauseVideo(); playing=false;
       document.getElementById('musicBadge').classList.add('paused');
       document.getElementById('musicLabel').textContent='▶ Espresso · Sabrina Carpenter';
     }else{
-      player.playVideo();playing=true;
+      player.playVideo(); playing=true;
       document.getElementById('musicBadge').classList.remove('paused');
       document.getElementById('musicLabel').textContent='Espresso · Sabrina Carpenter';
     }
@@ -449,10 +503,13 @@ function toggleMusic(){
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // BOOK / CARD
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-let curPage=0;
+// Pages: 1=HBD (p1 front), 2=Message (p1 back), 3=Photos (p2 front), 4=End (p2 back)
+// Cover is always static background, NOT a page step
+let curPage=1;
 const TOTAL=4;
 
 function openCard(){
+  curPage=1;
   document.getElementById('cardOverlay').style.display='flex';
   requestAnimationFrame(()=>document.getElementById('cardOverlay').style.opacity='1');
   document.getElementById('countdownPage').classList.add('hide');
@@ -467,23 +524,28 @@ function closeCard(){
 function updateBook(){
   const p1=document.getElementById('page1');
   const p2=document.getElementById('page2');
-  if(curPage<=1){
+  // page 1 = p1 unturned, page 2 = p1 turned, page 3 = p1+p2 turned front, page 4 = p1+p2 turned back
+  if(curPage===1){
     p1.classList.remove('turned');p2.classList.remove('turned');
     p1.style.zIndex=3;p2.style.zIndex=2;
   }else if(curPage===2){
     p1.classList.add('turned');p2.classList.remove('turned');
     p1.style.zIndex=3;p2.style.zIndex=2;
+  }else if(curPage===3){
+    p1.classList.add('turned');p2.classList.remove('turned');
+    p1.style.zIndex=2;p2.style.zIndex=3;
   }else{
     p1.classList.add('turned');p2.classList.add('turned');
     p1.style.zIndex=2;p2.style.zIndex=3;
   }
-  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===curPage));
-  document.getElementById('prevBtn').classList.toggle('hidden',curPage===0);
-  document.getElementById('nextBtn').classList.toggle('hidden',curPage===TOTAL-1);
+  // dots (0-indexed display)
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===curPage-1));
+  document.getElementById('prevBtn').classList.toggle('hidden',curPage===1);
+  document.getElementById('nextBtn').classList.toggle('hidden',curPage===TOTAL);
 }
-function nextPage(){if(curPage<TOTAL-1){curPage++;updateBook();}}
-function prevPage(){if(curPage>0){curPage--;updateBook();}}
-function goToPage(i){curPage=i;updateBook();}
+function nextPage(){if(curPage<TOTAL){curPage++;updateBook();}}
+function prevPage(){if(curPage>1){curPage--;updateBook();}}
+function goToPage(i){curPage=i+1;updateBook();}
 
 // Swipe / drag
 let sx=null;
