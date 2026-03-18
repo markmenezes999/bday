@@ -723,10 +723,8 @@ body {
    DEMO = true  → 30 seconds from page load
    DEMO = false → counts to March 24 2026
 ════════════════════════════════ */
-const DEMO   = true;
-const TARGET = DEMO
-  ? Date.now() + 30 * 1000
-  : new Date('March 24, 2026 00:00:00').getTime();
+const DEMO   = false;
+const TARGET = new Date('March 24, 2026 00:00:00').getTime();
 
 /* ─── STARS ─── */
 (function(){
