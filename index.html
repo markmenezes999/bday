@@ -41,10 +41,23 @@ body {
 .star{position:absolute;background:white;border-radius:50%;animation:twinkle ease-in-out infinite alternate;}
 @keyframes twinkle{0%{opacity:0.1;transform:scale(0.8);}100%{opacity:0.9;transform:scale(1.2);}}
 
-/* ─── PARTICLES ─── */
-.particles{position:fixed;inset:0;z-index:1;pointer-events:none;}
-.particle{position:absolute;border-radius:50%;animation:floatUp linear infinite;opacity:0;}
-@keyframes floatUp{0%{transform:translateY(100vh) rotate(0deg);opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{transform:translateY(-10vh) rotate(720deg);opacity:0;}}
+/* ─── ROSE PETALS ─── */
+.petals-layer{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden;}
+.petal{
+  position:absolute;top:-60px;
+  width:18px;height:22px;
+  background:radial-gradient(ellipse at 40% 35%, #ff6b6b 0%, #dc143c 55%, #8b0000 100%);
+  border-radius:150% 0% 150% 0% / 150% 0% 150% 0%;
+  opacity:0;
+  animation:petalFall linear infinite;
+  filter:drop-shadow(0 2px 4px rgba(139,0,0,0.35));
+}
+@keyframes petalFall{
+  0%  { transform:translateY(0) rotate(0deg) rotateX(0deg);    opacity:0; }
+  5%  { opacity:0.85; }
+  90% { opacity:0.7; }
+  100%{ transform:translateY(105vh) rotate(600deg) rotateX(180deg); opacity:0; }
+}
 
 /* ─── GRAIN ─── */
 .grain{position:fixed;inset:-50%;width:200%;height:200%;opacity:0.03;pointer-events:none;z-index:2;
@@ -171,7 +184,7 @@ body {
 #cardOverlay.visible{opacity:1;}
 
 /* ─── BOOK ─── */
-.book-wrap{position:relative;}
+.book-wrap{position:relative; display:inline-block;}
 .book{
   position:relative;
   width:min(400px,88vw);height:min(550px,80vh);
@@ -179,6 +192,7 @@ body {
   cursor:grab;
   -webkit-tap-highlight-color:transparent;
   user-select:none;
+  overflow:visible;
 }
 .book:active{cursor:grabbing;}
 
@@ -243,6 +257,7 @@ body {
 }
 .page.turned{transform:rotateY(-180deg);}
 
+/* Paper texture overlay on every page face */
 .page-face{
   position:absolute;inset:0;
   border-radius:4px 18px 18px 4px;
@@ -250,13 +265,19 @@ body {
   overflow:hidden;
   box-shadow:4px 0 30px rgba(0,0,0,0.5),-2px 0 8px rgba(0,0,0,0.2);
 }
-.page-front{background:linear-gradient(160deg,#fffafa 0%,#fff2f2 100%);}
+.page-front{
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23p)' opacity='0.06'/%3E%3C/svg%3E"),
+    linear-gradient(160deg,#fffafa 0%,#fff5f5 60%,#fff0f0 100%);
+}
 .page-front::before{
   content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
   background:linear-gradient(to bottom,#ff9999,#dc143c,#8b0000);
 }
 .page-back{
-  background:linear-gradient(160deg,#fffafa 0%,#fff2f2 100%);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23p)' opacity='0.06'/%3E%3C/svg%3E"),
+    linear-gradient(160deg,#fffafa 0%,#fff5f5 60%,#fff0f0 100%);
   transform:rotateY(180deg);
   border-radius:18px 4px 4px 18px;
   box-shadow:-4px 0 30px rgba(0,0,0,0.5);
@@ -275,6 +296,78 @@ body {
   position:absolute;bottom:0.75rem;right:1.2rem;
   font-size:0.58rem;letter-spacing:0.2em;color:rgba(220,20,60,0.3);text-transform:uppercase;
 }
+
+/* ─── WAX SEAL ─── */
+.wax-seal{
+  position:absolute;
+  bottom:1.8rem;right:1.8rem;
+  width:64px;height:64px;
+  z-index:10;
+  cursor:pointer;
+  animation:sealBob 2.5s ease-in-out infinite;
+}
+@keyframes sealBob{0%,100%{transform:rotate(-8deg) scale(1);}50%{transform:rotate(-8deg) scale(1.06);}}
+.wax-seal svg{ width:100%;height:100%; }
+.wax-seal.breaking{
+  animation:sealBreak 0.6s ease forwards;
+}
+@keyframes sealBreak{
+  0%  {transform:rotate(-8deg) scale(1);   opacity:1;}
+  30% {transform:rotate(-8deg) scale(1.25);opacity:1;}
+  60% {transform:rotate(-8deg) scale(0.8); opacity:0.5;}
+  100%{transform:rotate(-8deg) scale(0);   opacity:0;display:none;}
+}
+
+/* ─── NAV ARROWS — INSIDE BOOK ─── */
+.nav-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(100,0,0,0.25);
+  border:1px solid rgba(220,20,60,0.4);
+  color:rgba(255,180,180,0.95);
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+  cursor:pointer;transition:all 0.2s ease;
+  z-index:200;
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
+.nav-arrow:hover{background:rgba(220,20,60,0.45);color:white;transform:translateY(-50%) scale(1.1);}
+/* Sit just inside the card — 10px from each edge */
+#prevBtn{left:10px;}
+#nextBtn{right:10px;}
+.nav-arrow.hidden{opacity:0;pointer-events:none;}
+
+/* ─── HAPTIC PULSE ─── */
+@keyframes hapticPulse{
+  0%  {box-shadow:0 0 0 0 rgba(220,20,60,0.7);}
+  60% {box-shadow:0 0 0 14px rgba(220,20,60,0);}
+  100%{box-shadow:0 0 0 0 rgba(220,20,60,0);}
+}
+.book.pulse{animation:hapticPulse 0.4s ease-out;}
+
+/* ─── PAGE DOTS ─── */
+.page-dots{
+  position:absolute;bottom:-2.3rem;left:50%;transform:translateX(-50%);
+  display:flex;gap:0.5rem;
+}
+.dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(220,20,60,0.25);transition:all 0.3s ease;cursor:pointer;
+}
+.dot.active{background:#dc143c;transform:scale(1.4);box-shadow:0 0 8px rgba(220,20,60,0.6);}
+
+/* ─── SWIPE HINT — always visible, never disappears ─── */
+.swipe-hint{
+  position:absolute;bottom:-3.8rem;left:50%;transform:translateX(-50%);
+  color:rgba(255,153,153,0.45);font-size:0.65rem;letter-spacing:0.18em;
+  text-transform:uppercase;white-space:nowrap;
+  animation:hintBlink 2s ease-in-out infinite;
+  /* No pointer-events so it never interferes */
+  pointer-events:none;
+}
+@keyframes hintBlink{0%,100%{opacity:0.25;}50%{opacity:0.75;}}
+.swipe-arr{display:inline-block;animation:arrSlide 1.5s ease-in-out infinite;}
+@keyframes arrSlide{0%,100%{transform:translateX(0);}50%{transform:translateX(-6px);}}
 
 /* PAGE 1 — Happy Birthday */
 .hb-emoji{font-size:3rem;animation:heartBeat 1.2s ease-in-out infinite;filter:drop-shadow(0 0 10px rgba(220,20,60,0.4));}
@@ -299,12 +392,12 @@ body {
 /* PAGE 2 & 3 — Message pages */
 .msg-label{font-size:0.58rem;letter-spacing:0.32em;text-transform:uppercase;color:rgba(220,20,60,0.4);}
 .msg-body{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(0.82rem,2.2vw,0.98rem);
-  font-style:italic;line-height:1.9;text-align:center;
+  font-family:'Calibri','Gill Sans','Trebuchet MS',sans-serif;
+  font-size:clamp(0.88rem,2.3vw,1.02rem);
+  font-style:normal;line-height:1.85;text-align:center;
   color:#3a0810;padding:0 0.2rem;
 }
-.msg-sig{font-family:'Playfair Display',serif;font-size:0.95rem;font-style:italic;color:#dc143c;}
+.msg-sig{font-family:'Calibri','Gill Sans','Trebuchet MS',sans-serif;font-size:1rem;font-style:italic;color:#dc143c;}
 .msg-heart{font-size:1.3rem;animation:heartBeat 1.4s ease-in-out infinite;}
 
 /* PAGE 4 — Photos */
@@ -317,10 +410,15 @@ body {
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:0.25rem;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;
   color:rgba(220,20,60,0.35);overflow:hidden;
+  cursor:pointer;transition:border-color 0.2s,background 0.2s;
+  position:relative;
 }
-.photo-slot img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
-.slot-icon{font-size:1.5rem;opacity:0.3;}
-.photo-caption{font-family:'Playfair Display',serif;font-size:0.82rem;font-style:italic;color:#3a0810;text-align:center;}
+.photo-slot:hover{border-color:rgba(220,20,60,0.5);background:linear-gradient(145deg,rgba(220,20,60,0.12),rgba(139,0,0,0.08));}
+.photo-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px;}
+.photo-slot input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.slot-icon{font-size:1.5rem;opacity:0.3;pointer-events:none;}
+.slot-txt{pointer-events:none;font-size:0.5rem;letter-spacing:0.1em;color:rgba(220,20,60,0.3);}
+.photo-caption{font-family:'Calibri','Gill Sans','Trebuchet MS',sans-serif;font-size:0.82rem;font-style:italic;color:#3a0810;text-align:center;}
 
 /* PAGE 5 — End */
 .end-big{font-size:2.8rem;filter:drop-shadow(0 0 12px rgba(220,20,60,0.5));animation:heartBeat 1.4s ease-in-out infinite;}
@@ -415,7 +513,7 @@ body {
   <div class="aurora-blob"></div>
 </div>
 <div class="stars" id="stars"></div>
-<div class="particles" id="particles"></div>
+<div class="petals-layer" id="petalsLayer"></div>
 
 <!-- ════════════════════════════════
      COUNTDOWN PAGE
@@ -494,6 +592,27 @@ body {
         <div class="cover-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
         <div class="cover-tagline">open your heart 🌹</div>
         <div class="cover-corner">✦</div>
+        <!-- Wax seal -->
+        <div class="wax-seal" id="waxSeal" onclick="breakSeal()" title="Break the seal to open">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="wg" cx="40%" cy="35%">
+                <stop offset="0%" stop-color="#ff6b6b"/>
+                <stop offset="50%" stop-color="#dc143c"/>
+                <stop offset="100%" stop-color="#6b0000"/>
+              </radialGradient>
+            </defs>
+            <!-- Seal blob -->
+            <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35"
+              fill="url(#wg)" opacity="0.95"/>
+            <!-- Inner ring -->
+            <circle cx="50" cy="50" r="26" fill="none" stroke="rgba(255,180,180,0.4)" stroke-width="1.5"/>
+            <!-- ISA monogram -->
+            <text x="50" y="56" text-anchor="middle"
+              font-family="Georgia,serif" font-size="13" font-style="italic"
+              fill="rgba(255,230,230,0.9)" letter-spacing="1">ISA</text>
+          </svg>
+        </div>
       </div>
 
       <!--
@@ -559,10 +678,22 @@ body {
           <div class="page-content">
             <div class="photo-label">✦ our memories ✦</div>
             <div class="photo-grid">
-              <div class="photo-slot"><span class="slot-icon">📸</span><span>Add photo</span></div>
-              <div class="photo-slot"><span class="slot-icon">📸</span><span>Add photo</span></div>
-              <div class="photo-slot"><span class="slot-icon">📸</span><span>Add photo</span></div>
-              <div class="photo-slot"><span class="slot-icon">📸</span><span>Add photo</span></div>
+              <div class="photo-slot" onclick="this.querySelector('input').click()">
+                <span class="slot-icon">📸</span><span class="slot-txt">tap to add</span>
+                <input type="file" accept="image/*" onchange="loadPhoto(this)">
+              </div>
+              <div class="photo-slot" onclick="this.querySelector('input').click()">
+                <span class="slot-icon">📸</span><span class="slot-txt">tap to add</span>
+                <input type="file" accept="image/*" onchange="loadPhoto(this)">
+              </div>
+              <div class="photo-slot" onclick="this.querySelector('input').click()">
+                <span class="slot-icon">📸</span><span class="slot-txt">tap to add</span>
+                <input type="file" accept="image/*" onchange="loadPhoto(this)">
+              </div>
+              <div class="photo-slot" onclick="this.querySelector('input').click()">
+                <span class="slot-icon">📸</span><span class="slot-txt">tap to add</span>
+                <input type="file" accept="image/*" onchange="loadPhoto(this)">
+              </div>
             </div>
             <div class="photo-caption">our best moments 🌹</div>
           </div>
@@ -594,10 +725,11 @@ body {
         </div>
       </div>
 
-    </div><!-- /book -->
+      <!-- Nav arrows inside the book — always on screen on mobile -->
+      <button class="nav-arrow hidden" id="prevBtn" onclick="nextOrPrevPage('prev')">‹</button>
+      <button class="nav-arrow" id="nextBtn" onclick="nextOrPrevPage('next')">›</button>
 
-    <button class="nav-arrow hidden" id="prevBtn" onclick="prevPage()">‹</button>
-    <button class="nav-arrow" id="nextBtn" onclick="nextPage()">›</button>
+    </div><!-- /book -->
 
     <!-- 5 dots for 5 views -->
     <div class="page-dots" id="pageDots">
@@ -651,16 +783,39 @@ const TARGET = DEMO
   }
 })();
 
-/* ─── PARTICLES ─── */
-(function(){
-  const cols = ['#dc143c','#ff4444','#8b0000','#ff9999','#fff'];
-  const c    = document.getElementById('particles');
-  for(let i = 0; i < 30; i++){
-    const p  = document.createElement('div');
-    p.className = 'particle';
-    const sz = Math.random() * 12 + 4;
-    p.style.cssText = `left:${Math.random()*100}%;width:${sz}px;height:${sz}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>0.5?'50%':'3px'};animation-duration:${Math.random()*15+10}s;animation-delay:${Math.random()*10}s;opacity:0;`;
-    c.appendChild(p);
+/* ─── ROSE PETALS ─── */
+(function spawnPetals(){
+  const layer = document.getElementById('petalsLayer');
+  const sizes  = [14, 16, 18, 20, 22];
+  const shades = [
+    'radial-gradient(ellipse at 40% 35%,#ff9999 0%,#dc143c 55%,#8b0000 100%)',
+    'radial-gradient(ellipse at 40% 35%,#ffb3b3 0%,#e01a45 55%,#7a0000 100%)',
+    'radial-gradient(ellipse at 40% 35%,#ff6b6b 0%,#c01030 55%,#6b0000 100%)',
+    'radial-gradient(ellipse at 40% 35%,#ffd0d0 0%,#dc143c 55%,#8b0000 100%)',
+  ];
+  // Create 28 petals with staggered delays
+  for(let i = 0; i < 28; i++){
+    const p   = document.createElement('div');
+    p.className = 'petal';
+    const sz  = sizes[Math.floor(Math.random() * sizes.length)];
+    const dur = 7 + Math.random() * 8;        // 7–15s fall duration
+    const del = Math.random() * 14;            // stagger start
+    const x   = Math.random() * 105 - 2;      // % across screen
+    const sw  = 40 + Math.random() * 80;      // sway amount px
+    const rot = Math.random() * 360;
+    p.style.cssText = `
+      left:${x}%;
+      width:${sz}px; height:${Math.round(sz*1.2)}px;
+      background:${shades[Math.floor(Math.random()*shades.length)]};
+      border-radius:150% 0% 150% 0% / 150% 0% 150% 0%;
+      animation-duration:${dur}s;
+      animation-delay:-${del}s;
+      filter:drop-shadow(0 2px 3px rgba(139,0,0,0.3));
+      --sw:${sw}px;
+    `;
+    // Individual sway keyframe via inline style animation override
+    p.style.animationName = 'petalFall';
+    layer.appendChild(p);
   }
 })();
 
@@ -767,10 +922,25 @@ function toggleMusic(){
 
 /* ════════════════════════════════
    BOOK / PAGE LOGIC
-   5 views, 3 physical pages
-   pg1: front=view1, back=view2
-   pg2: front=view3, back=view4
-   pg3: front=view5
+   
+   We have 3 physical pages (pg1, pg2, pg3).
+   Each page has a FRONT and BACK face.
+   
+   The trick: instead of 5 "views", we use
+   the page's turned state + z-index to show
+   exactly the right face every time.
+   
+   REAL mapping (5 views):
+   View 1 → pg1 FRONT  (Happy Birthday)      pg1 on top, unturned
+   View 2 → pg1 BACK   (Message pt1)         pg1 on top, turned
+   View 3 → pg2 FRONT  (Message pt2)         pg2 on top, unturned
+   View 4 → pg2 BACK   (Photos)              pg2 on top, turned
+   View 5 → pg3 FRONT  (The End)             pg3 on top, unturned
+
+   Key insight: views 2→3 need pg1 to STAY turned
+   but pg2 must come to the FRONT (higher z-index).
+   That's what was causing the "double click" feel —
+   z-index wasn't changing so nothing looked different.
 ════════════════════════════════ */
 let curView  = 1;
 const VIEWS  = 5;
@@ -780,32 +950,35 @@ const pg3    = document.getElementById('pg3');
 const dots   = document.querySelectorAll('.dot');
 
 function updateBook(){
-  /* Page turning rules:
-     view 1 → pg1 unturned, pg2 unturned, pg3 unturned   (see pg1 front)
-     view 2 → pg1 turned,   pg2 unturned, pg3 unturned   (see pg1 back)
-     view 3 → pg1 turned,   pg2 unturned, pg3 unturned   (see pg2 front — pg2 on top)
-     view 4 → pg1 turned,   pg2 turned,   pg3 unturned   (see pg2 back)
-     view 5 → pg1 turned,   pg2 turned,   pg3 unturned   (see pg3 front — pg3 on top)
-  */
-  pg1.classList.toggle('turned', curView >= 2);
-  pg2.classList.toggle('turned', curView >= 4);
-  pg3.classList.remove('turned'); // pg3 never turns
-
-  // z-index layering so correct page is on top
-  if(curView <= 2){
-    pg1.style.zIndex = 4; pg2.style.zIndex = 3; pg3.style.zIndex = 2;
-  } else if(curView === 3){
-    pg2.style.zIndex = 4; pg1.style.zIndex = 3; pg3.style.zIndex = 2;
-  } else if(curView === 4){
-    pg2.style.zIndex = 4; pg1.style.zIndex = 3; pg3.style.zIndex = 2;
-  } else {
-    pg3.style.zIndex = 4; pg2.style.zIndex = 3; pg1.style.zIndex = 2;
+  switch(curView){
+    case 1:
+      // Show pg1 FRONT — pg1 unturned and on top
+      pg1.classList.remove('turned'); pg2.classList.remove('turned'); pg3.classList.remove('turned');
+      pg1.style.zIndex = 4; pg2.style.zIndex = 3; pg3.style.zIndex = 2;
+      break;
+    case 2:
+      // Show pg1 BACK — pg1 turned, still on top so we see its back face
+      pg1.classList.add('turned'); pg2.classList.remove('turned'); pg3.classList.remove('turned');
+      pg1.style.zIndex = 4; pg2.style.zIndex = 3; pg3.style.zIndex = 2;
+      break;
+    case 3:
+      // Show pg2 FRONT — pg1 stays turned (flipped away), pg2 comes to top unturned
+      pg1.classList.add('turned'); pg2.classList.remove('turned'); pg3.classList.remove('turned');
+      pg2.style.zIndex = 4; pg1.style.zIndex = 3; pg3.style.zIndex = 2;
+      break;
+    case 4:
+      // Show pg2 BACK — pg2 turned and on top
+      pg1.classList.add('turned'); pg2.classList.add('turned'); pg3.classList.remove('turned');
+      pg2.style.zIndex = 4; pg1.style.zIndex = 3; pg3.style.zIndex = 2;
+      break;
+    case 5:
+      // Show pg3 FRONT — pg3 comes to top unturned
+      pg1.classList.add('turned'); pg2.classList.add('turned'); pg3.classList.remove('turned');
+      pg3.style.zIndex = 4; pg2.style.zIndex = 3; pg1.style.zIndex = 2;
+      break;
   }
 
-  // dots
   dots.forEach((d, i) => d.classList.toggle('active', i === curView - 1));
-
-  // arrows
   document.getElementById('prevBtn').classList.toggle('hidden', curView === 1);
   document.getElementById('nextBtn').classList.toggle('hidden', curView === VIEWS);
 }
@@ -813,6 +986,32 @@ function updateBook(){
 function nextPage(){ if(curView < VIEWS){ curView++; updateBook(); } }
 function prevPage(){ if(curView > 1)    { curView--; updateBook(); } }
 function goToPage(v){ curView = v; updateBook(); }
+
+/* Wrapper called by arrow buttons — adds haptic pulse */
+function nextOrPrevPage(dir){
+  if(dir === 'next') nextPage();
+  else               prevPage();
+  // Visual haptic pulse on the book
+  const b = document.getElementById('book');
+  b.style.animation = 'none';
+  void b.offsetWidth;
+  b.style.animation = 'hapticPulse 0.4s ease-out';
+  setTimeout(() => b.style.animation = '', 400);
+  // Native haptic on supported mobile devices
+  if(navigator.vibrate) navigator.vibrate(30);
+}
+
+/* ─── WAX SEAL ─── */
+function breakSeal(){
+  const seal = document.getElementById('waxSeal');
+  if(!seal || seal.classList.contains('breaking')) return;
+  seal.classList.add('breaking');
+  // After animation, open the card
+  setTimeout(() => {
+    seal.style.display = 'none';
+    openCard();
+  }, 550);
+}
 
 /* ─── OPEN / CLOSE ─── */
 function openCard(){
@@ -841,27 +1040,48 @@ bookEl.addEventListener('mouseleave', () => { swipeStartX = null; });
 bookEl.addEventListener('mouseup', e => {
   if(swipeStartX === null) return;
   const dx = e.clientX - swipeStartX;
-  if(dx < -50) nextPage();
-  else if(dx > 50) prevPage();
+  if(dx < -50)      nextOrPrevPage('next');
+  else if(dx > 50)  nextOrPrevPage('prev');
   swipeStartX = null;
 });
 bookEl.addEventListener('touchstart', e => { swipeStartX = e.touches[0].clientX; }, { passive:true });
 bookEl.addEventListener('touchend',   e => {
   if(swipeStartX === null) return;
   const dx = e.changedTouches[0].clientX - swipeStartX;
-  if(dx < -50) nextPage();
-  else if(dx > 50) prevPage();
+  if(dx < -50)     nextOrPrevPage('next');
+  else if(dx > 50) nextOrPrevPage('prev');
   swipeStartX = null;
 });
 
 /* ─── KEYBOARD ─── */
 document.addEventListener('keydown', e => {
   if(document.getElementById('cardOverlay').classList.contains('active')){
-    if(e.key === 'ArrowRight') nextPage();
-    if(e.key === 'ArrowLeft')  prevPage();
+    if(e.key === 'ArrowRight') nextOrPrevPage('next');
+    if(e.key === 'ArrowLeft')  nextOrPrevPage('prev');
     if(e.key === 'Escape')     closeCard();
   }
 });
+
+/* ────────────────────────────────
+   PHOTO UPLOAD
+   Click any slot → picks image →
+   displays it inside that slot
+──────────────────────────────── */
+function loadPhoto(input){
+  if(!input.files || !input.files[0]) return;
+  const slot   = input.closest('.photo-slot');
+  const reader = new FileReader();
+  reader.onload = function(e){
+    // Remove placeholder icon/text
+    slot.querySelectorAll('.slot-icon,.slot-txt').forEach(el => el.remove());
+    // Insert image (input stays for re-clicking)
+    let img = slot.querySelector('img');
+    if(!img){ img = document.createElement('img'); slot.insertBefore(img, input); }
+    img.src = e.target.result;
+    slot.style.border = '1.5px solid rgba(220,20,60,0.4)';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
 
 /* ════════════════════════════════
    CONFETTI
